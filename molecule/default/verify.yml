@@ -1,0 +1,30 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  - name: stat vector.toml
+    stat:
+      path: "/etc/vector/vector.toml"
+    register: vector_toml_stat
+
+  - name: "check if vector.toml exists"
+    assert:
+      that:
+        - vector_toml_stat.stat.exists == True
+      success_msg: "/etc/vector/vector.toml exists"
+      fail_msg: "/etc/vector/vector.toml does not exist"
+
+  - name: validate config
+    ansible.builtin.command: vector validate --no-environment --config-toml /etc/vector/vector.toml
+    register: validation_result
+
+  - name: "check if vector.toml valid"
+    assert:
+      that:
+        - validation_result.failed == false
+      success_msg: "validation /etc/vector/vector.toml success"
+      fail_msg: "validation /etc/vector/vector.toml failed"

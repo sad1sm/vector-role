@@ -1,13 +1,25 @@
 ---
 # tasks file for vector-role
 - name: Install Vector package
-  become: true
+  #become: true
   ansible.builtin.yum:
     name: "https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_version }}-1.x86_64.rpm"
     disable_gpg_check: true
+  when: ansible_pkg_mgr == "dnf"
+
+- name: Install prerequisites for Ansible to install .deb via apt module
+  ansible.builtin.apt:
+    name:
+    - xz-utils
+  when: ansible_pkg_mgr == "apt"
+
+- name: Install Vector package
+  ansible.builtin.apt:
+    deb: "https://packages.timber.io/vector/{{ vector_version }}/vector_{{ vector_version }}-1_amd64.deb"
+  when: ansible_pkg_mgr == "apt"
 
 - name: Configure Vector
-  become: true
+  #become: true
   ansible.builtin.template:
     src: vector.toml.j2
     dest: /etc/vector/vector.toml
@@ -15,9 +27,8 @@
     validate: vector validate --no-environment --config-toml %s
 
 - name: Creates directory
-  become: true
+  #become: true
   ansible.builtin.file:
     path: /var/lib/vector/local_logs
     state: directory
     mode: 0644
-  notify: Start vector service
