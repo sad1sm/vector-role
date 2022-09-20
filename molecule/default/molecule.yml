@@ -2,14 +2,10 @@
 dependency:
   name: galaxy
 driver:
-  name: docker
+  name: podman
 platforms:
-  - name: centos8
-    dockerfile: Dockerfile.j2
+  - name: pod
     image: docker.io/pycontribs/centos:8
-    pre_build_image: false
-  - name: debian
-    image: python:3.8.14-bullseye
     pre_build_image: true
 provisioner:
   name: ansible
