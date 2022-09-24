@@ -4,8 +4,8 @@ dependency:
 driver:
   name: podman
 platforms:
-  - name: pod
-    image: docker.io/pycontribs/centos:8
+  - name: centos8
+    image: f1tz/centos8mirrorfix:latest
     pre_build_image: true
 provisioner:
   name: ansible
