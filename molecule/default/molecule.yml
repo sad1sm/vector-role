@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
 driver:
-  name: podman
+  name: docker
 platforms:
   - name: centos8
     image: f1tz/centos8mirrorfix:latest
